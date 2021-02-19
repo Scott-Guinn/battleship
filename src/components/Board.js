@@ -57,12 +57,13 @@ var Board = () => {
 
   var rows = [];
 
-  var numrows = 5;
-  for (var r = 0; r <= numrows; r++) {
+  var numrows = board.length;
+  for (var r = 0; r < numrows; r++) {
     var squaresInRow = [];
-    for (var c = 0; c <= numrows; c++) {
+    for (var c = 0; c < numrows; c++) {
       squaresInRow.push(<Square key={c}
                                 id={`r${r}c${c}`}
+                                value={board[r][c]}
                                 setMouseDownSquare={setMouseDownSquare}
                                 setMouseUpSquare={setMouseUpSquare} />);
     }
@@ -70,7 +71,7 @@ var Board = () => {
   }
 
   return (
-    <div>
+    <div>test here: {board[0][0]}
       {rows}
     </div>
   )
