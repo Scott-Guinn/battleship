@@ -1,0 +1,12 @@
+.square {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+  background-color: rgb(185, 185, 185);
+  border-style: solid;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+}
