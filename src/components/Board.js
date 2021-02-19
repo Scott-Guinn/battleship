@@ -3,8 +3,8 @@ import Square from './Square.js';
 import '../index.css';
 
 var Board = () => {
-  var [ship, setShip] = useState(false);
-  var [shot, setShot] = useState(false);
+  // var [ship, setShip] = useState(false);
+  // var [shot, setShot] = useState(false);
   var [ships, setShips] = useState({2: false,
                                     3: false,
                                     4: false,
@@ -30,12 +30,29 @@ var Board = () => {
     setBoard(newBoard);
   }
 
+  var updateShips = (ship) => {
+    var shipsUpdate = {...ships};
+    shipsUpdate.ship = !shipsUpdate.ship;
+    setShips(shipsUpdate);
+
+  }
+
   var setMouseDownSquare = (id) => {
     console.log('setMouseDownSquare has been called on square: ', id);
   }
 
   var setMouseUpSquare = (id) => {
     console.log('setMouseUpSquare has been called on square: ', id);
+    // compare mouseDownSquare to mouseUpSquare
+    // find the difference between the rows AND the difference between the columns
+      // (dif of rows OR dif of cols will be 0, depending if it's a horizontal placement or a vertical one)
+
+    // if the difference is 4, check if ships.5 is true
+    // if the difference is 3, check if ships.4 is true
+    // if the difference is 2, check if ships.3 is true
+    // if the difference is x, and 1 <= x <= 4, check if ships.x + is true
+
+
   }
 
   var rows = [];
