@@ -57,45 +57,62 @@ var Board = () => {
       console.log('currentShip: ', currentShip);
       console.log('currentShip length: ', ships[currentShip].length);
 
-      var rowDown = mouseDownSquare.slice(1, 2);
+      var rowDown = Number(mouseDownSquare.slice(1, 2));
       console.log({ rowDown });
-      var colDown = mouseDownSquare.slice(3, 4);
+      var colDown = Number(mouseDownSquare.slice(3, 4));
       console.log({ colDown });
-      var rowUp = mouseUpId.slice(1, 2);
+      var rowUp = Number(mouseUpId.slice(1, 2));
       console.log({ rowUp });
-      var colUp = mouseUpId.slice(3, 4);
+      var colUp = Number(mouseUpId.slice(3, 4));
       console.log({ colUp });
 
-      // updateSquare of rowDown, colDown
-      updateSquare(rowDown, colDown, 1)
-
-      // if the difference in rowUp & rowDown is 0, it's a horizontal placement:
-      if (rowUp - rowDown === 0) {
-
-        if (colUp > colDown) {
+      if (rowUp - rowDown === 0 && colUp >= colDown) {
+       // horizontalPositive
+       if (colDown + ships[currentShip].length <= 10) {
+        updateSquare(rowDown, colDown, 1)
+        for (let i = 1; i < ships[currentShip].length; i++) {
+          colDown++;
+          updateSquare(rowDown, colDown, 1);
+        }
+       } else {
+         alert(`invalid selection`);
+         return;
+       }
+      } else if (rowUp - rowDown === 0 && colUp < colDown) {
+        //horizontalNegative
+        if (colDown - ships[currentShip].length >= -1) {
+          updateSquare(rowDown, colDown, 1)
+          for (let i = 1; i < ships[currentShip].length; i++) {
+            colDown--;
+            updateSquare(rowDown, colDown, 1);
+          }
+        } else {
+          alert(`invalid selection`);
+         return;
+        }
+      } else if (colUp - colDown === 0 && rowUp >= rowDown) {
+        // verticalPositive
+        if (rowDown + ships[currentShip].length <= 10) {
+          updateSquare(rowDown, colDown, 1)
           for (let i = 1; i < ships[currentShip].length; i++) {
             colDown++;
             updateSquare(rowDown, colDown, 1);
           }
         } else {
-          for (let i = 1; i < ships[currentShip].length; i++) {
-            colDown--;
-            updateSquare(rowDown, colDown, 1);
-          }
+          alert(`invalid selection`);
+         return;
         }
-
-      } else {
-        // if the difference in colUp & colDown is 0, it's a vertical placment:
-        if (rowUp > rowDown) {
-          for (let j = 1; j < ships[currentShip].length; j++) {
-            rowDown++;
-            updateSquare(rowDown, colDown, 1);
-          }
-        } else {
+      } else if (colUp - colDown === 0 && rowUp < rowDown) {
+        //verticalNegative
+        if (rowDown - ships[currentShip].length >= -1) {
+          updateSquare(rowDown, colDown, 1)
           for (let j = 1; j < ships[currentShip].length; j++) {
             rowDown--;
             updateSquare(rowDown, colDown, 1);
           }
+        } else {
+          alert(`invalid selection`);
+         return;
         }
       }
 
