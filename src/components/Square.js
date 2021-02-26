@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-var Square = ({ id, value, setMouseDownSquare, setMouseUpSquare }) => {
+var Square = ({ id, value, setMouseDownSquare, setMouseUpSquare, placeShip }) => {
   var [ship, setShip] = useState(false);
   var [shot, setShot] = useState(false);
   var [backgroundColor, setBackgroundColor] =  useState("rgb(185, 1:wq85, 185)");
@@ -19,23 +19,18 @@ var Square = ({ id, value, setMouseDownSquare, setMouseUpSquare }) => {
     }
   })
 
-  // this function is no longer necessary?
-  var placeShip = () => {
-    setShip(!ship);
-    if(ship === false) {
-      setBackgroundColor("rgb(31, 172, 62)");
-    } else {
-      setBackgroundColor("rgb(185, 185, 185)");
-    }
+  var handleClick = () => {
+    console.log('id on handleClick: ', id);
+    setMouseUpSquare(id);
+    placeShip(id);
   }
 
-  // adjust the mouseUp event listener to
+
   return (
     <div style={{backgroundColor: backgroundColor}}
-        //  onClick={placeShip}
          className="square"
-         onMouseDown={() => {placeShip(); setMouseDownSquare(id)}}
-         onMouseUp={() => setMouseUpSquare(id)}
+         onMouseDown={() => setMouseDownSquare(id)}
+         onMouseUp={() => handleClick()}
 
          >{id}value: {value}</div>
   )
