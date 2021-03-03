@@ -25,7 +25,6 @@ var Square = ({ id, value, setMouseDownSquare, setMouseUpSquare, placeShip }) =>
     placeShip(id);
   }
 
-
   return (
     <div style={{backgroundColor: backgroundColor}}
          className="square"

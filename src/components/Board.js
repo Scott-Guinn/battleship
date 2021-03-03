@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Square from './Square.js';
+import axios from 'axios';
 import '../index.css';
 
-var Board = () => {
+var Board = ({username, setGameMode}) => {
   // var [ship, setShip] = useState(false);
   // var [shot, setShot] = useState(false);
   var [shipPlacementMode, setShipPlacementMode] = useState(false);
@@ -209,6 +210,17 @@ var Board = () => {
     setCurrentShip(nameOfShip);
   }
 
+  const handleSubmitBoard = () => {
+    // post the board to the server (along with a unique identifier)
+    var postData = {
+      username: username,
+      board: board,
+    }
+    axios.post('http://localhost:8000/setboard', postData)
+    .then((listOfOpponents) => {
+    })
+  }
+
   // Board Creation Logic:
   var rows = [];
   var numrows = board.length;
@@ -226,27 +238,33 @@ var Board = () => {
   }
 
   return (
-    <div>
+    <div className="in-progress">
       {rows}
 
       {/* For Refactor: Dynamically render these buttons */}
-      {!ships.destroyer.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="destroyer"> destroyer - length 2</button> : <div />}
+      {!ships.destroyer.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="destroyer"> destroyer - length 2</button> : null}
 
       <div />
 
-      {!ships.submarine.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="submarine">  submarine - length 3</button> : <div />}
+      {!ships.submarine.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="submarine">  submarine - length 3</button> : null}
 
       <div />
 
-      {!ships.cruiser.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="cruiser">  cruiser - length 3</button> : <div />}
+      {!ships.cruiser.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="cruiser">  cruiser - length 3</button> : null}
 
       <div />
 
-      {!ships.battleship.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="battleship">  battleship - length 4</button> : <div />}
+      {!ships.battleship.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="battleship">  battleship - length 4</button> : null}
 
       <div />
 
-      {!ships.carrier.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="carrier">  carrier - length 5</button> : <div />}
+      {!ships.carrier.placed ? <button onClick={(e) => handleShipClick(e.target.value)} value="carrier">  carrier - length 5</button> : null}
+
+      {ships.destroyer.placed
+      && ships.submarine.placed
+      && ships.cruiser.placed
+      && ships.battleship.placed
+      && ships.carrier.placed ? <button onClick={() => handleSubmitBoard()}>Submit Warplan</button> : null }
 
     </div>
   )
