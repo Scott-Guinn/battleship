@@ -39,8 +39,25 @@ var Board = () => {
   // 2: hit ship
   var updateSquare = (row, col, value) => {
     var newBoard = board.slice();
-    newBoard[row][col] = value;
-    setBoard(newBoard);
+    // check if value at that row,col is already the input value
+    // if so, return false
+    if (newBoard[row][col] === value) {
+      console.log('square already set to that value');
+      return false;
+    } else {
+      newBoard[row][col] = value;
+      setBoard(newBoard);
+      return true;
+    }
+  }
+
+  var checkSquare = (row, col, value) => {
+    if (board[row][col] === value) {
+      console.log('CHECKSQUARE: square already set to that value');
+      return false;
+    } else {
+      return true;
+    }
   }
 
   var updateShips = (ship) => {
@@ -68,34 +85,21 @@ var Board = () => {
 
       if (rowUp - rowDown === 0 && colUp >= colDown) {
         console.log('horizontal positive ship placement');
-       // horizontalPositive
-       if (colDown + ships[currentShip].length <= 10) {
-        updateSquare(rowDown, colDown, 1)
-        for (let i = 1; i < ships[currentShip].length; i++) {
-          colDown++;
-          updateSquare(rowDown, colDown, 1);
-        }
-       } else {
-         alert(`invalid selection`);
-         return;
-       }
-      } else if (rowUp - rowDown === 0 && colUp < colDown) {
-        console.log('horizontal negative ship placement');
-        //horizontalNegative
-        if (colDown - ships[currentShip].length >= -1) {
-          updateSquare(rowDown, colDown, 1)
-          for (let i = 1; i < ships[currentShip].length; i++) {
-            colDown--;
-            updateSquare(rowDown, colDown, 1);
+        // horizontalPositive
+        if (colDown + ships[currentShip].length <= 10) {
+          // check that all squares are valid
+          var checkColDown = colDown;
+          if (!checkSquare(rowDown, colDown, 1)) {
+            return;
           }
-        } else {
-          alert(`invalid selection`);
-         return;
-        }
-      } else if (colUp - colDown === 0 && rowUp >= rowDown) {
-        console.log('vertical positive ship placement');
-        // verticalPositive
-        if (rowDown + ships[currentShip].length <= 10) {
+          for (let c = 1; c < ships[currentShip].length; c++) {
+            checkColDown++;
+            if (!checkSquare(rowDown, checkColDown, 1)) {
+              alert('What kind of captain are you? Your ships would collide!');
+              return;
+            };
+          }
+          // now update those squares
           updateSquare(rowDown, colDown, 1)
           for (let i = 1; i < ships[currentShip].length; i++) {
             colDown++;
@@ -103,12 +107,77 @@ var Board = () => {
           }
         } else {
           alert(`invalid selection`);
-         return;
+          return;
+        }
+      } else if (rowUp - rowDown === 0 && colUp < colDown) {
+        console.log('horizontal negative ship placement');
+        //horizontalNegative
+        if (colDown - ships[currentShip].length >= -1) {
+          // check that all squares are valid
+          var checkColDown = colDown;
+          if (!checkSquare(rowDown, colDown, 1)) {
+            return;
+          }
+          for (let c = 1; c < ships[currentShip].length; c++) {
+            checkColDown--;
+            if (!checkSquare(rowDown, checkColDown, 1)) {
+              alert('What kind of captain are you? Your ships would collide!')
+              return;
+            };
+          }
+          // now update those squares
+          updateSquare(rowDown, colDown, 1)
+          for (let i = 1; i < ships[currentShip].length; i++) {
+            colDown--;
+            updateSquare(rowDown, colDown, 1);
+          }
+        } else {
+          alert(`invalid selection`);
+          return;
+        }
+      } else if (colUp - colDown === 0 && rowUp >= rowDown) {
+        console.log('vertical positive ship placement');
+        // verticalPositive
+        if (rowDown + ships[currentShip].length <= 10) {
+          // check that all squares are valid
+          var checkRowDown = rowDown;
+          if (!checkSquare(rowDown, colDown, 1)) {
+            return;
+          }
+          for (let c = 1; c < ships[currentShip].length; c++) {
+            checkRowDown++;
+            if (!checkSquare(checkRowDown, colDown, 1)) {
+              alert('What kind of captain are you? Your ships would collide!')
+              return;
+            };
+          }
+          // now update those squares
+          updateSquare(rowDown, colDown, 1)
+          for (let i = 1; i < ships[currentShip].length; i++) {
+            rowDown++;
+            updateSquare(rowDown, colDown, 1);
+          }
+        } else {
+          alert(`invalid selection`);
+          return;
         }
       } else if (colUp - colDown === 0 && rowUp < rowDown) {
         console.log('vertical negative ship placement');
         //verticalNegative
         if (rowDown - ships[currentShip].length >= -1) {
+          // check that all squares are valid
+          var checkRowDown = rowDown;
+          if (!checkSquare(rowDown, colDown, 1)) {
+            return;
+          }
+          for (let c = 1; c < ships[currentShip].length; c++) {
+            checkRowDown--;
+            if (!checkSquare(checkRowDown, colDown, 1)) {
+              alert('What kind of captain are you? Your ships would collide!')
+              return;
+            };
+          }
+          // now update those squares
           updateSquare(rowDown, colDown, 1);
           for (let j = 1; j < ships[currentShip].length; j++) {
             rowDown--;
@@ -116,7 +185,7 @@ var Board = () => {
           }
         } else {
           alert(`invalid selection`);
-         return;
+          return;
         }
       } else {
         alert(`invalid selection, ships cannot be placed diagonally`);
@@ -146,14 +215,14 @@ var Board = () => {
   for (var r = 0; r < numrows; r++) {
     var squaresInRow = [];
     for (var c = 0; c < numrows; c++) {
-      squaresInRow.push(<Square key={r+c}
+      squaresInRow.push(<Square key={[r, c]}
         id={`r${r}c${c}`}
         value={board[r][c]}
         placeShip={placeShip}
         setMouseDownSquare={setMouseDownSquare}
         setMouseUpSquare={setMouseUpSquare} />);
     }
-    rows.push(<div>{squaresInRow}</div>);
+    rows.push(<div key={r}>{squaresInRow}</div>);
   }
 
   return (
