@@ -67,6 +67,7 @@ var Board = () => {
       console.log({ colUp });
 
       if (rowUp - rowDown === 0 && colUp >= colDown) {
+        console.log('horizontal positive ship placement');
        // horizontalPositive
        if (colDown + ships[currentShip].length <= 10) {
         updateSquare(rowDown, colDown, 1)
@@ -79,6 +80,7 @@ var Board = () => {
          return;
        }
       } else if (rowUp - rowDown === 0 && colUp < colDown) {
+        console.log('horizontal negative ship placement');
         //horizontalNegative
         if (colDown - ships[currentShip].length >= -1) {
           updateSquare(rowDown, colDown, 1)
@@ -91,6 +93,7 @@ var Board = () => {
          return;
         }
       } else if (colUp - colDown === 0 && rowUp >= rowDown) {
+        console.log('vertical positive ship placement');
         // verticalPositive
         if (rowDown + ships[currentShip].length <= 10) {
           updateSquare(rowDown, colDown, 1)
@@ -103,9 +106,10 @@ var Board = () => {
          return;
         }
       } else if (colUp - colDown === 0 && rowUp < rowDown) {
+        console.log('vertical negative ship placement');
         //verticalNegative
         if (rowDown - ships[currentShip].length >= -1) {
-          updateSquare(rowDown, colDown, 1)
+          updateSquare(rowDown, colDown, 1);
           for (let j = 1; j < ships[currentShip].length; j++) {
             rowDown--;
             updateSquare(rowDown, colDown, 1);
@@ -114,6 +118,9 @@ var Board = () => {
           alert(`invalid selection`);
          return;
         }
+      } else {
+        alert(`invalid selection, ships cannot be placed diagonally`);
+        return;
       }
 
       console.log('board after placeShip: ', board);
@@ -124,7 +131,6 @@ var Board = () => {
       console.log('ships after placeShips call: ', ships);
     }
   }
-
 
   var handleShipClick = (nameOfShip) => {
     console.log('nameOfShip is: ', nameOfShip);
